@@ -114,28 +114,66 @@ Kad server radi, otvori:
 
 ## Deployment
 
-### Backend (Railway/Render)
+### Full Server Setup (Ubuntu 22.04+)
 
 ```bash
-# Procfile
-web: uvicorn main:app --host 0.0.0.0 --port $PORT
+# Clone and run the deploy script on your VPS as root
+bash deploy/deploy.sh YOUR_DOMAIN.com
 ```
 
-### Frontend (Vercel/Netlify)
+This handles everything: packages, firewall, backend venv, nginx, systemd services.
+
+### Manual / Update Deploy
+
+#### 1. Build Frontend Locally
 
 ```bash
+cd frontend
+npm install
 npm run build
-# Deploy dist/ folder
+```
+
+#### 2. Upload Build to Server
+
+```bash
+# Copy the dist/ folder to the server
+scp -r frontend/dist/* root@YOUR_SERVER:/var/www/web/
+
+# Or rsync (faster for updates)
+rsync -avz --delete frontend/dist/ root@YOUR_SERVER:/var/www/web/
+```
+
+#### 3. Set Permissions on Server
+
+```bash
+# SSH into the server, then:
+chown -R www-data:www-data /var/www/web
+chmod -R 755 /var/www/web
+```
+
+#### 4. Update Backend
+
+```bash
+# Copy backend files
+rsync -avz --exclude='__pycache__' --exclude='venv' --exclude='.env' --exclude='*.db' \
+  backend/ root@YOUR_SERVER:/home/web/backend/
+
+# SSH in and restart
+ssh root@YOUR_SERVER
+cd /home/web/backend
+source venv/bin/activate
+pip install -r requirements.txt
+systemctl restart gimmick-api gimmick-bot
 ```
 
 ### Environment Variables
 
-Backend:
+Backend (`.env`):
 ```env
-DATABASE_URL=postgresql://...
+DATABASE_URL=sqlite+aiosqlite:///./gimmick.db
 SECRET_KEY=your-secret-key
 BOT_TOKEN=your-telegram-bot-token
-WEBAPP_URL=https://your-frontend-url.com
+WEBAPP_URL=https://your-domain.com
 ```
 
 ## Database Models
