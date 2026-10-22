@@ -1,8 +1,7 @@
-# Gimmick - Digital Goods Marketplace
+# Telegram Marketplace
 
-Modern Telegram Mini App za prodaju game keys i in-game valuta.
+A Telegram-connected marketplace for digital goods, with buyer, seller and administration interfaces. Built with Python/FastAPI and React.
 
-![Gimmick Screenshot](https://via.placeholder.com/800x400/0f172a/22c55e?text=Gimmick)
 
 ## Features
 
@@ -31,7 +30,7 @@ Modern Telegram Mini App za prodaju game keys i in-game valuta.
 ## Struktura Projekta
 
 ```
-gimmick/
+telegram-marketplace/
 ├── backend/
 │   ├── app/
 │   │   ├── routers/      # API endpoints
@@ -58,7 +57,7 @@ gimmick/
 ### 1. Backend Setup
 
 ```bash
-cd gimmick/backend
+cd telegram-marketplace/backend
 
 # Virtual environment
 python3 -m venv venv
@@ -79,7 +78,7 @@ uvicorn main:app --reload --port 8000
 ### 2. Frontend Setup
 
 ```bash
-cd gimmick/frontend
+cd telegram-marketplace/frontend
 
 # Install dependencies
 npm install
@@ -91,7 +90,7 @@ npm run dev
 ### 3. Telegram Bot
 
 ```bash
-cd gimmick/backend
+cd telegram-marketplace/backend
 python bot.py
 ```
 
